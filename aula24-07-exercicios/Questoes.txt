@@ -1,0 +1,35 @@
+use loja;
+
+-- 1 Liste os clientes ativos desde 2023
+
+/*select * from clientes
+WHERE ativo = 1 and data_cadastro>='2023-01-01';
+*/
+-- 2 Liste os produtos com estoque menor que 50 e seu respectivo nome de categoria
+/*SELECT p.nome, c.nome, p.estoque
+from produtos p, categorias c
+where p.categoria_id = c.id and p.estoque < 50*/
+
+-- 3 Mostre o número total de pedidos feitos pelo cliente "Roberto Lima"
+/*SELECT COUNT(*)
+FROM pedidos p JOIN clientes cli ON p.cliente_id = cli.id 
+WHERE cli.nome = 'Roberto Lima'*/
+
+-- 4 Recupere o nome dos produtos diferentes que foram vendidos 
+/*SELECT DISTINCT p.nome
+FROM produtos p, itens_pedido ip 
+WHERE ip.produto_id = p.id*/
+-- 5 Liste os nomes dos produtos com suas respectivas quantidades de venda
+
+-- GROUP by p.nome
+-- 6 Para cada vendedor que realizou alguma venda, exiba o total de vendas realizadas
+SELECT v.nome, COUNT(*) as quantidade
+FROM vendedores v JOIN vendas vd ON v.id = vd.vendedor_id
+GROUP BY v.id
+-- 7 Para cada vendedor, mostrar o total de vendas realizadas, independentemente se foi realizada alguma venda ou não
+
+-- 8 Liste os nomes dos produtos que têm um preço maior do que o preço médio dos produtos vendidos.
+
+-- 9 Liste os nomes dos clientes que compraram pelo menos um produto da categoria "Eletrônicos".
+
+-- 10 Liste os nomes dos vendedores que participaram de vendas em que o valor total do pedido foi superior à média de todos os pedidos

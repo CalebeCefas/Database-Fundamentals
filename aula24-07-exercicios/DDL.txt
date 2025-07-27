@@ -1,0 +1,167 @@
+CREATE SCHEMA IF NOT EXISTS loja;
+use loja;
+
+CREATE TABLE IF NOT EXISTS clientes (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100),
+    email VARCHAR(100),
+    cidade VARCHAR(50),
+    data_cadastro DATE,
+    ativo BOOLEAN
+);
+
+CREATE TABLE IF NOT EXISTS  categorias (
+    id INT PRIMARY KEY,
+    nome VARCHAR(50),
+    descricao TEXT
+);
+
+CREATE TABLE IF NOT EXISTS  produtos (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100),
+    preco DECIMAL(10,2),
+    estoque INT,
+    categoria_id INT,
+    data_lancamento DATE,
+    FOREIGN KEY (categoria_id) REFERENCES categorias(id)
+);
+
+CREATE TABLE IF NOT EXISTS  pedidos (
+    id INT PRIMARY KEY,
+    cliente_id INT,
+    data_pedido DATE,
+    valor_total DECIMAL(10,2),
+    status VARCHAR(20),
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+);
+
+CREATE TABLE IF NOT EXISTS  itens_pedido (
+    id INT PRIMARY KEY,
+    pedido_id INT,
+    produto_id INT,
+    quantidade INT,
+    preco_unitario DECIMAL(10,2),
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
+    FOREIGN KEY (produto_id) REFERENCES produtos(id)
+);
+
+CREATE TABLE IF NOT EXISTS  vendedores (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100),
+    email VARCHAR(100),
+    comissao DECIMAL(5,2),
+    data_contratacao DATE,
+    ativo BOOLEAN
+);
+
+CREATE TABLE IF NOT EXISTS  vendas (
+    id INT PRIMARY KEY,
+    pedido_id INT,
+    vendedor_id INT,
+    data_venda DATE,
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
+    FOREIGN KEY (vendedor_id) REFERENCES vendedores(id)
+);
+
+INSERT IGNORE INTO categorias VALUES
+(1, 'Eletrônicos', 'Produtos eletrônicos em geral'),
+(2, 'Roupas', 'Vestuário masculino e feminino'),
+(3, 'Livros', 'Livros de diversos gêneros'),
+(4, 'Casa e Jardim', 'Produtos para casa e jardim'),
+(5, 'Esportes', 'Artigos esportivos');
+
+INSERT IGNORE INTO clientes VALUES
+(1, 'João Silva', 'joao@email.com', 'São Paulo', '2023-01-15', 1),
+(2, 'Maria Santos', 'maria@email.com', 'Rio de Janeiro', '2023-03-22', 1),
+(3, 'Pedro Oliveira', 'pedro@email.com', 'Belo Horizonte', '2024-01-10', 1),
+(4, 'Ana Costa', 'ana@email.com', 'Porto Alegre', '2024-02-05', 1),
+(5, 'Carlos Souza', 'carlos@email.com', 'Salvador', '2024-03-12', 0),
+(6, 'Lucia Ferreira', 'lucia@email.com', 'Fortaleza', '2023-05-18', 1),
+(7, 'Roberto Lima', 'roberto@email.com', 'Recife', '2023-08-30', 1),
+(8, 'Fernanda Rocha', 'fernanda@email.com', 'Curitiba', '2024-01-25', 1);
+
+INSERT IGNORE INTO produtos VALUES
+(1, 'Smartphone Samsung', 899.90, 50, 1, '2023-01-01'),
+(2, 'Notebook Dell', 2499.00, 25, 1, '2023-02-15'),
+(3, 'Smartwatch Apple', 1299.00, 30, 1, '2023-03-01'),
+(4, 'Camiseta Polo', 89.90, 100, 2, '2023-01-10'),
+(5, 'Calça Jeans', 129.90, 75, 2, '2023-01-20'),
+(6, 'Vestido Social', 199.90, 40, 2, '2023-02-01'),
+(7, 'Livro Ficção Científica', 39.90, 200, 3, '2023-01-05'),
+(8, 'Livro Romance', 29.90, 150, 3, '2023-01-15'),
+(9, 'Livro História', 49.90, 80, 3, '2023-02-10'),
+(10, 'Sofá 3 Lugares', 1299.00, 15, 4, '2023-01-25'),
+(11, 'Mesa de Jantar', 899.00, 20, 4, '2023-02-05'),
+(12, 'Bicicleta Mountain Bike', 1599.00, 12, 5, '2023-01-30'),
+(13, 'Tênis Corrida', 299.90, 60, 5, '2023-02-20'),
+(14, 'Raquete Tênis', 189.90, 25, 5, '2023-03-10'),
+(15, 'Fone Bluetooth', 199.90, 80, 1, '2023-04-01');
+
+INSERT IGNORE INTO vendedores VALUES
+(1, 'José Vendas', 'jose@empresa.com', 5.50, '2022-01-15', 1),
+(2, 'Sandra Comercial', 'sandra@empresa.com', 6.00, '2022-03-20', 1),
+(3, 'Ricardo Top', 'ricardo@empresa.com', 7.50, '2022-06-10', 1),
+(4, 'Mariana Silva', 'mariana@empresa.com', 5.00, '2023-01-05', 0),
+(5, 'Paulo Negócios', 'paulo@empresa.com', 6.50, '2023-02-15', 1);
+
+INSERT IGNORE INTO pedidos VALUES
+(1, 1, '2023-06-01', 929.80, 'Entregue'),
+(2, 2, '2023-06-15', 2499.00, 'Entregue'),
+(3, 1, '2023-07-10', 159.80, 'Entregue'),
+(4, 3, '2024-01-20', 1498.90, 'Entregue'),
+(5, 4, '2024-02-10', 219.80, 'Entregue'),
+(6, 2, '2024-02-25', 399.80, 'Entregue'),
+(7, 6, '2023-06-30', 1299.00, 'Entregue'),
+(8, 7, '2023-08-15', 489.80, 'Entregue'),
+(9, 3, '2024-03-01', 329.80, 'Entregue'),
+(10, 8, '2024-03-15', 899.00, 'Entregue'),
+(11, 1, '2024-01-05', 199.90, 'Entregue'),
+(12, 2, '2024-03-20', 1599.00, 'Entregue'),
+(13, 4, '2024-03-25', 89.90, 'Entregue'),
+(14, 6, '2023-07-15', 299.90, 'Entregue'),
+(15, 7, '2023-09-10', 79.80, 'Entregue');
+
+INSERT IGNORE INTO itens_pedido VALUES
+(1, 1, 1, 1, 899.90),   -- Pedido 1: Smartphone
+(2, 1, 7, 1, 29.90),    -- Pedido 1: Livro Romance
+(3, 2, 2, 1, 2499.00),  -- Pedido 2: Notebook
+(4, 3, 4, 1, 89.90),    -- Pedido 3: Camiseta
+(5, 3, 8, 1, 29.90),    -- Pedido 3: Livro Romance
+(6, 3, 7, 1, 39.90),    -- Pedido 3: Livro Ficção
+(7, 4, 3, 1, 1299.00),  -- Pedido 4: Smartwatch
+(8, 4, 15, 1, 199.90),  -- Pedido 4: Fone Bluetooth
+(9, 5, 4, 1, 89.90),    -- Pedido 5: Camiseta
+(10, 5, 5, 1, 129.90),  -- Pedido 5: Calça Jeans
+(11, 6, 13, 1, 299.90), -- Pedido 6: Tênis
+(12, 6, 8, 1, 29.90),   -- Pedido 6: Livro Romance
+(13, 6, 7, 1, 39.90),   -- Pedido 6: Livro Ficção
+(14, 6, 9, 1, 49.90),   -- Pedido 6: Livro História
+(15, 7, 10, 1, 1299.00), -- Pedido 7: Sofá
+(16, 8, 13, 1, 299.90),  -- Pedido 8: Tênis
+(17, 8, 14, 1, 189.90),  -- Pedido 8: Raquete
+(18, 9, 15, 1, 199.90),  -- Pedido 9: Fone
+(19, 9, 5, 1, 129.90),   -- Pedido 9: Calça Jeans
+(20, 10, 11, 1, 899.00), -- Pedido 10: Mesa de Jantar
+(21, 11, 15, 1, 199.90), -- Pedido 11: Fone
+(22, 12, 12, 1, 1599.00), -- Pedido 12: Bicicleta
+(23, 13, 4, 1, 89.90),   -- Pedido 13: Camiseta
+(24, 14, 13, 1, 299.90), -- Pedido 14: Tênis
+(25, 15, 7, 1, 39.90),   -- Pedido 15: Livro Ficção
+(26, 15, 8, 1, 39.90);   -- Pedido 15: Livro Romance
+
+INSERT IGNORE INTO vendas VALUES
+(1, 1, 1, '2023-06-01'),   -- José vendeu pedido 1
+(2, 2, 2, '2023-06-15'),   -- Sandra vendeu pedido 2
+(3, 3, 1, '2023-07-10'),   -- José vendeu pedido 3
+(4, 4, 3, '2024-01-20'),   -- Ricardo vendeu pedido 4
+(5, 5, 2, '2024-02-10'),   -- Sandra vendeu pedido 5
+(6, 6, 3, '2024-02-25'),   -- Ricardo vendeu pedido 6
+(7, 7, 1, '2023-06-30'),   -- José vendeu pedido 7
+(8, 8, 5, '2023-08-15'),   -- Paulo vendeu pedido 8
+(9, 9, 3, '2024-03-01'),   -- Ricardo vendeu pedido 9
+(10, 10, 2, '2024-03-15'), -- Sandra vendeu pedido 10
+(11, 11, 1, '2024-01-05'), -- José vendeu pedido 11
+(12, 12, 3, '2024-03-20'), -- Ricardo vendeu pedido 12
+(13, 13, 2, '2024-03-25'), -- Sandra vendeu pedido 13
+(14, 14, 5, '2023-07-15'), -- Paulo vendeu pedido 14
+(15, 15, 1, '2023-09-10'); -- José vendeu pedido 15
